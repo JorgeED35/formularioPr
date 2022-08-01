@@ -1,66 +1,66 @@
-/* const regExp =/^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/;
+const posts = [
+    {
+        userId: 1,
+        id: 1,
+        title:"Jomar",
+        body:
+            "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto",
+    },
+    {
+        userId: 1,
+        id: 2,
+        title: "Isabel",
+        body:
+            "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla",
+    },
+    {
+        userId: 1,
+        id: 3,
+        title: "Piter",
+        body:
+            "pitel\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut",
+    },
+];
 
-console.log(regExp.test("jomar@hotmail.com")) */
+const findPostId = (id) => 
 
-const formu = document.getElementById('formulario')
-const nombre = document.getElementById('nombre')
-const apellido = document.getElementById('apellido')
+    new Promise((resolve, reject) => {
+            setTimeout(() => {
+            const post = posts.find((item) => item.id === id)
+            if(post){
+                resolve(post)
+            }else{
+                reject("No se encuentra ningun usuario referente a este id: " + id)
+            }
 
-const alertSuccess = document.getElementById('alertSuccess')
-const alertEmail = document.getElementById('alertEmail')
-const alertName = document.getElementById('alertName')
+        }, 2000);
 
-const regUserName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/
-const regEmail = /^[a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})$/
+    })
 
-const pintarMensajeExito = () => {
-    alertSuccess.classList.remove('d-none')
-    alertSuccess.textContent ="Mensaje enviado con exito"
+
+/* findPostId (2)
+.then((post) => {
+    console.log(post)})
+.catch(e => console.log(e)); */
+
+const buscar = async (id) => {
+try {
+    const resPost = await Promise.all([
+        findPostId(1),
+        findPostId(2)
+    ])
+    console.log(resPost[1].title, resPost[0].title)
+
+    //const post1 = await findPostId(1)
+    //const post2 = await findPostId(2)
+    //console.log(post2.title, post1.title)
+    } catch (error) {
+    console.log(error)
+} finally{
+    console.log("se ejcuta si o si")
 }
 
-const pintarMsjError = (mistakes) => {
-    mistakes.forEach(item => {
-        item.tipo.classList.remove("d-none")
-        item.tipo.textContent = item.msj
-    });
 }
+buscar(4)
 
-formu.addEventListener('submit', e => {
-    alertSuccess.classList.add('d-none')
-    
-    const mistakes = [];
-    //console.log(!nombre.value.trim())
-    
-    e.preventDefault();
-    
-    if(!regUserName.test(nombre.value) || !nombre.value.trim()){
-       nombre.classList.add('is-invalid')
-        mistakes.push({
-            tipo: alertName,
-            msj: "Formato no valido en el campo nombre, solo letras "
-        })
-    }else{
-        nombre.classList.remove("is-invalid")
-        nombre.classList.add("is-valid")
-        alertName.classList.add("d-none")
-    }
-    if(!regEmail.test(apellido.value) || !apellido.value.trim()){
-       apellido.classList.add('is-invalid')
-        mistakes.push({
-            tipo: alertEmail,
-            msj: "Formato no valido en el campo email, caracteres validos"
-        })
-    }else{
-        apellido.classList.remove("is-invalid")
-        apellido.classList.add("is-valid")
-        alertEmail.classList.add("d-none")
-    }
-    
-    if(mistakes.length !== 0){
-        pintarMsjError(mistakes)
-        return
-    }
-
-        pintarMensajeExito()
-        console.log('Formato enviado')
-})
+console.log("Fin del codigo jj")
