@@ -1,91 +1,62 @@
-//Invocando los elelmentos a cambiar con JS
-const loading = document.querySelector('#loading')
+// Funcion constructora = plantilla = classs
+/* function Carro(Modelos) {
+    this.Modelos = Modelos;
 
-//addEventListener para que al momento de la ejecucion este tenga que esperar 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchApi()    
-})
-
-
-
-//async y await para implementar una promesa como metodo para consumir la API
-const fetchApi = async (url = 'https://rickandmortyapi.com/api/character') => {
-    //    console.log('Jomar Player w Js')
-    try {
-        loadingStatus(true)
-        
-        const res = await fetch(url)
-        const data = await res.json()
-
-       //console.log(data)
-       pintarData(data)
-    } catch (error) {
-        
-    } finally{
-         loadingStatus(false)
+    this.velocidad = function (){
+        return `${this.Modelos} velocidad Max 260 mph`
     }
 }
 
-const pintarData = data => {
-    const cards = document.getElementById('card-dina')
-    const templatesCard = document.getElementById('template-card').content
-    cards.textContent = "";
-    const fragment = document.createDocumentFragment()
+Carro.prototype.velocidadKm = function(){
+    return `${this.Modelos} velocidad Max 418 kmph`
+}
+
+const mercedez = new Carro("Mercedez c500");
+const audy = new Carro("Audy Rs7");
+console.log(mercedez.velocidad())
+console.log(audy.velocidadKm()) */
+
+class Carro {
+    constructor (Modelo,año){
+        this.Modelo = Modelo;
+        this.año = año;
+    }
     
-    data.results.forEach(item => {
-       //console.log(item)
-       const clone = templatesCard.cloneNode(true)
-       clone.querySelector('h5').textContent = item.name
-       clone.querySelector('p').textContent = item.species
-       clone.querySelector('img').setAttribute("src", item.image)
-
-       //Guardado en el frangment para evitar el reflow 
-       fragment.appendChild(clone)
-    });
-
-    cards.appendChild(fragment)
-    pintarPaginacion(data.info)
-}
-
-const pintarPaginacion = data => {
-    //console.log(data)
-    const pagina = document.getElementById('paginacion')
-    pagina.textContent = "";
-    const templatePag = document.getElementById('template-paginacion').content
-    const clone = templatePag.cloneNode(true)
-
-    if (data.prev) {
-        clone.querySelector('.btn-outline-secondary').disabled = false;
-    } else {
-        clone.querySelector('.btn-outline-secondary').disabled = true; 
-    }
-
-    if (data.next) {
-        clone.querySelector('.btn-outline-primary').disabled = false;
-    } else {
-        clone.querySelector('.btn-outline-primary').disabled = true;
-        
-    }
-        
-    pagina.appendChild(clone)
     
-    pagina.addEventListener('click', e => {
-        if (e.target.matches(".btn-outline-primary")) {
-            console.log('click on me')
-            fetchApi(data.next)
-        }
+    velocidad(){
+        return `${this.Modelo} Alcanza 260 mph`
+    }
 
-        if (e.target.matches(".btn-outline-secondary")) {
-            console.log('click on you')
-            fetchApi(data.prev)
-        }
-    })
+    static velocidadKm (Modelo){
+      return `${Modelo} -Aceleracion inicial `;
+    }
 }
-//Pintar el loading  
-const loadingStatus = (status) => {
-    if (status) {
-        loading.classList.remove('d-none')
-    } else {
-        loading.classList.add('d-none')
-            }
+
+
+
+
+class Confecionary extends Carro {
+
+   #color = []
+
+    set serColor(color){
+        this.#color.push(color)
+    }
+
+    get getColor(){
+        return this.#color
+    }
+
+    
 }
+
+console.log(Carro.velocidadKm('Audy en etapa de : '))
+
+const audy = new Confecionary('Audy S8 r', 2018);
+
+audy.serColor = 'Aqua blue'
+audy.serColor = 'White bones'
+audy.serColor = 'Red Carmessi'
+
+console.log(audy.getColor)
+//console.log(audy.velocidad())
