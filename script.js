@@ -1,62 +1,150 @@
-// Funcion constructora = plantilla = classs
-/* function Carro(Modelos) {
-    this.Modelos = Modelos;
+const formulario = document.getElementById("formulario");
+const cardStudent = document.getElementById("cardStudent");
+const cardProfessor = document.getElementById("cardProfessor");
+const templateStudent = document.getElementById("templateStudent").content;
+const templateProfessor = document.getElementById("templateProfessor").content;
 
-    this.velocidad = function (){
-        return `${this.Modelos} velocidad Max 260 mph`
+
+const estudiantes = []
+const profesores = []
+
+document.addEventListener('click', e => {
+  //console.log(e.target.dataset.nombre)
+    if(e.target.dataset.nombre){
+      /* console.log(e.target.matches('.btn-success')) */
+      if(e.target.matches('.btn-success')){
+        estudiantes.map(item => {
+          if(item.nombre === e.target.dataset.nombre ){
+            item.setEstado = true
+          }
+          console.log(item)
+          return item
+        })
+      }
+      if(e.target.matches('.btn-danger')){
+        estudiantes.map(item => {
+          if(item.nombre === e.target.dataset.nombre ){
+            item.setEstado = false
+          }
+          console.log(item)
+          return item
+        })
+      }
+      Persona.pintarPersonaUI(estudiantes, "Estudiante")
     }
+  
+})
+
+
+class Persona {
+  constructor(nombre, edad){
+    this.nombre = nombre
+    this.edad = edad
+  }
+
+    static pintarPersonaUI(persona, tipo){
+        if(tipo === "Estudiante"){
+
+          cardStudent.textContent = "";
+          const fragment = document.createDocumentFragment()
+          
+          persona.forEach(item => {
+              fragment.appendChild(item.addNewEstudiante())
+          });
+
+          cardStudent.appendChild(fragment)
+
+        }
+        if (tipo === "Profesor") {
+          cardProfessor.textContent = "";
+
+          const fragment = document.createDocumentFragment()
+          persona.forEach(item => {
+            fragment.appendChild(item.addNewProfesor())
+          });
+
+          cardProfessor.appendChild(fragment)
+        }
+    }
+
+
 }
 
-Carro.prototype.velocidadKm = function(){
-    return `${this.Modelos} velocidad Max 418 kmph`
+class Estudiante extends Persona{
+  #estado = false
+  #estudiante = "Estudiante"
+
+  set setEstado(estado){
+    this.#estado = estado
+  }
+
+  get getEstudiante (){
+    return this.#estudiante
+  }
+
+  addNewEstudiante(){
+    const clone = templateStudent.cloneNode(true)
+    clone.querySelector('h5 .text-primary').textContent = this.nombre
+    clone.querySelector( '.lead').textContent = "Edad :" +this.edad 
+    clone.querySelector('h6').textContent = this.getEstudiante
+ 
+
+    if(this.#estado){
+      clone.querySelector('.badge').className = 'badge bg-success'
+      clone.querySelector('.btn-success').disabled = true 
+      clone.querySelector('.btn-danger').disabled = false 
+    }else{
+      clone.querySelector('.badge').className = 'badge bg-danger'
+      clone.querySelector('.btn-danger').disabled = true 
+      clone.querySelector('.btn-success').disabled = false 
+        }
+
+        clone.querySelector('.badge').textContent = this.#estado ? "Aprobado" : "Reprobado"
+
+        clone.querySelector('.btn-success').dataset.nombre = this.nombre
+        clone.querySelector('.btn-danger').dataset.nombre = this.nombre
+
+    return clone
+  }
 }
 
-const mercedez = new Carro("Mercedez c500");
-const audy = new Carro("Audy Rs7");
-console.log(mercedez.velocidad())
-console.log(audy.velocidadKm()) */
+class Professor extends Persona{
 
-class Carro {
-    constructor (Modelo,año){
-        this.Modelo = Modelo;
-        this.año = año;
+  #profesor = "Profesor"
+
+  addNewProfesor(){
+    const clone = templateProfessor.cloneNode(true)
+    clone.querySelector('h5').textContent = this.nombre
+    clone.querySelector('h6').textContent = this.#profesor
+    clone.querySelector('.lead').textContent = "Edad :" + this.edad
+
+    return clone 
+
+  }
+
+
+}
+
+formulario.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const datos = new FormData(formulario);
+  const [nombre, edad, opcion] = [...datos.values()];
+
+    if (opcion === "Estudiante") {
+      
+      const estudiante = new Estudiante(nombre, edad)
+       estudiantes.push(estudiante)
+       Persona.pintarPersonaUI(estudiantes, opcion)
     }
     
+    if (opcion === "Profesor") {
+      
+      const profesor = new Professor(nombre, edad);
+      profesores.push(profesor)
+      Persona.pintarPersonaUI(profesores, opcion)
+
+    }
     
-    velocidad(){
-        return `${this.Modelo} Alcanza 260 mph`
-    }
 
-    static velocidadKm (Modelo){
-      return `${Modelo} -Aceleracion inicial `;
-    }
-}
-
-
-
-
-class Confecionary extends Carro {
-
-   #color = []
-
-    set serColor(color){
-        this.#color.push(color)
-    }
-
-    get getColor(){
-        return this.#color
-    }
-
-    
-}
-
-console.log(Carro.velocidadKm('Audy en etapa de : '))
-
-const audy = new Confecionary('Audy S8 r', 2018);
-
-audy.serColor = 'Aqua blue'
-audy.serColor = 'White bones'
-audy.serColor = 'Red Carmessi'
-
-console.log(audy.getColor)
-//console.log(audy.velocidad())
+}); 
